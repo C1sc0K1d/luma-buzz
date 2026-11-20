@@ -72,7 +72,7 @@ export const HOME_DETAILS = {
   },
   contactConfirmation: {
     eyebrow: 'Demo confirmation',
-    title: 'Message sent — simulation',
+    title: 'Message sent',
     description: `Thank you for getting in touch. In the live service, our team will contact you within ${HOME_DATA.contact.responseBusinessHours} business hours. This preview simulates sending; no message has been delivered.`,
     confirmation: true,
   },

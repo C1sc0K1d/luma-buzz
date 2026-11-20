@@ -65,7 +65,7 @@ export function LearningSection({
                   onClick={(event) => onExplore(category.name, event.currentTarget)}
                   aria-label={`Explore ${category.name}`}
                 >
-                  Explore{' '}
+                  <span className="course-card__label">Explore</span>
                   <span className="arrow-icon" aria-hidden="true">
                     →
                   </span>
@@ -113,7 +113,7 @@ export function LearningSection({
                 View course
               </button>
               <a className="button button--ghost" href="#courses">
-                Browse all courses{' '}
+                <span className="button__label">Browse all courses</span>
                 <span className="arrow-icon" aria-hidden="true">
                   →
                 </span>

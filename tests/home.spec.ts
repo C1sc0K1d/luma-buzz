@@ -94,7 +94,7 @@ test('contact validates, caps the question and clears only after valid submissio
   await expect(page.locator('#question-hint')).toHaveText('1500 / 1500 characters');
   await send.click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog).toContainText('Message sent — simulation');
+  await expect(dialog.getByRole('heading', { name: 'Message sent', exact: true })).toBeVisible();
   await expect(dialog).toContainText('24 business hours');
   await dialog.getByRole('button', { name: 'Done', exact: true }).click();
   await expect(send).toBeFocused();

@@ -209,6 +209,9 @@
 
     .button--ghost:hover {
       background: #ffffff1f;
+    }
+
+    .button--ghost:hover .button__label {
       text-decoration: underline;
       text-underline-offset: 4px;
     }
@@ -733,6 +736,8 @@
   }
   .course-card__link:hover {
     @apply text-brand;
+  }
+  .course-card__link:hover .course-card__label {
     text-decoration: underline;
     text-underline-offset: 4px;
   }
