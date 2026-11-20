@@ -2,9 +2,12 @@
 
 # Compiled output
 /dist
+/.next
+/out
+/test-results
+/playwright-report
+*.tsbuildinfo
 /tmp
-/out-tsc
-/bazel-out
 
 # Node
 /node_modules
@@ -30,13 +33,9 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
-.sass-cache/
 /connect.lock
 /coverage
 /libpeerconnection.log
-testem.log
-/typings
 __screenshots__/
 
 # System files

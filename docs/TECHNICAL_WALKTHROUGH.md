@@ -1,91 +1,48 @@
 # Technical walkthrough
 
-## Scope and review criteria
+## Structure
 
-This is a front-end landing page implementation. Evaluation should distinguish implemented interactions from integrations that the design does not specify.
+The App Router entry points are `src/app/layout.tsx` and `src/app/page.tsx`. The layout owns metadata and the local Inter font. The page supplies typed mock data to the home feature.
 
-| Criterion            | Implementation and evidence                                                                                                       | Remaining limits                                                                                                                                                                                          |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Design accuracy      | Original SVG photographs, color tokens, section order and mobile/desktop compositions; local font and original collage            | Visual inspection is not a pixel-difference test. The Latin placeholder paragraph was replaced with English at the user's request. Input borders and focus indicators deliberately prioritize visibility. |
-| Responsiveness       | Mobile-first CSS, shared breakpoints, fluid containers and grids                                                                  | Browser checks cover representative widths; real-device and cross-browser testing remain useful.                                                                                                          |
-| Code quality         | Feature-based folders, co-located templates/styles/tests, typed content, strict TypeScript/templates, BEM, Prettier and Stylelint | Stylelint enforces syntax, not the quality of every naming decision.                                                                                                                                      |
-| Working interactions | Section navigation, mobile disclosure, detail dialogs, validation and simulated submission confirmation                           | No authentication, enrollment, catalog backend or email delivery service.                                                                                                                                 |
-| Accessibility        | Semantic HTML, keyboard navigation, focus management, labels, field errors, image alternatives and reduced motion                 | No full assistive-technology or WCAG conformance audit has been performed.                                                                                                                                |
-| Performance          | Prerendered HTML, local assets, prioritized intro, lazy photographs and smaller WOFF2 font                                        | No Lighthouse score or field Core Web Vitals measurement is claimed.                                                                                                                                      |
+`src/features/home` contains the intro, courses, community, contact form, shared dialog and final call to action. The home component coordinates menu and dialog state. Inputs are typed with interfaces; there is no global state library or backend.
 
-## A five-minute demo
+Tailwind is configured through `@tailwindcss/postcss`. Theme tokens and BEM component classes live in `src/app/globals.css`, using `@apply` for shared layout and appearance. Custom CSS preserves the supplied collage, decorative shapes and precise responsive spacing.
 
-1. Show the mobile layout, then resize to desktop. Explain the content order and why breakpoints follow layout needs.
-2. Use the keyboard to reach the skip link. Open the mobile navigation, choose a section, and demonstrate Escape.
-3. Open a course dialog. Demonstrate initial focus, forward/reverse Tab wrapping, Escape, and focus restoration. Open the mobile Log in dialog to show why focus returns to the menu toggle rather than its now-hidden child button.
-4. Submit an empty form. Show that the first invalid field receives focus and references its error. Correct the values, submit, and demonstrate the confirmation dialog and cleared fields; explicitly explain that this is a simulation and no email has been sent.
-5. Show the feature folders, a BEM example, the shared tokens, and the commands for build, tests, styles and formatting.
+## Decisions beyond the reference
 
-## Decisions to explain
+- Tablet layouts interpolate between the mobile and desktop designs, with breakpoints at 600, 768 and 900px.
+- English replaces the mixed-language form labels and placeholder community copy.
+- Contact submission is a local simulation. It validates before resetting and never claims actual delivery.
+- The mobile navigation is a disclosure, not an ARIA application menu. Clicking outside or pressing Escape dismisses it.
+- A native dialog handles course details and contact confirmation. Its name, description, focus boundaries and return target are explicit.
+- The original 17 photographs remain local. Next's image component generates optimized responsive responses; source images are unchanged.
 
-### Why standalone Angular components?
+## Verification
 
-The repository already used Angular. Keeping that stack avoids an unnecessary migration. Sections own their markup and styles; the home page composes them and coordinates navigation. Signals cover local UI state, outputs communicate category selection, and Reactive Forms handle validation. A global state store would add complexity without a shared-state requirement.
+Checked on November 20, 2026, on Windows with Node.js 24.21.0.
 
-### Why this folder structure?
+| Check                                               | Result                                         |
+| --------------------------------------------------- | ---------------------------------------------- |
+| `npm ci`                                            | Passed; ESLint deprecation warning noted below |
+| `npm run build`                                     | Passed; the home page is prerendered           |
+| `npm run typecheck`                                 | Passed                                         |
+| `npm run lint`                                      | Passed                                         |
+| `npm test`                                          | 16 tests passed                                |
+| `npm run test:e2e` with `PLAYWRIGHT_CHANNEL=msedge` | 14 passed, 1 intentionally skipped             |
+| `npm run format:check`                              | Passed                                         |
+| `git diff --check`                                  | Passed                                         |
 
-The unit of organization is the home feature. Closely related TypeScript, HTML, SCSS and tests live together. This follows the current Angular style guide's feature-oriented approach. The minimal root component bootstraps the page; the dialog has a separate component because focus handling and its tests form a distinct responsibility.
+Playwright ran against the production server in headless Microsoft Edge at 375 × 812, 768 × 1024 and 1280 × 900. The skipped case is the mobile-menu test on desktop, where navigation is inline.
 
-### Why BEM plus Angular style encapsulation?
+The browser checks cover section visibility, successful image loading, horizontal overflow, JavaScript page errors, outside-click dismissal, Escape, dialog focus containment and restoration, required fields, invalid email, the 1,500-character limit, mock confirmation and form reset. They also exercise the skip link and reduced-motion setting. Unit tests cover the rating-to-stars calculation, number formatting and contact validation boundaries.
 
-Encapsulation reduces accidental CSS leakage. BEM makes ownership and variations readable to the next developer. These solve related but different maintenance problems. Shared blocks such as `button` remain global; component-specific elements such as `intro__image` remain local. The `u-` prefix identifies layout utilities. Sass `@use` imports shared breakpoints without emitting duplicate rules.
+Desktop and mobile screenshots were visually reviewed, including the intro and community collage. The mobile title spacing and skip-link visibility were corrected during that review. Screenshots and failure traces are generated in the ignored `test-results` directory; there is no automated pixel comparison with Figma.
 
-### Why a native dialog?
+No checks in the table are currently failing. ESLint 9 emits an installation warning because it is out of support. It remains in use because the React, import and accessibility plugins bundled with this Next.js version do not yet declare ESLint 10 compatibility. This is a tooling maintenance gap, not a suppressed lint failure.
 
-`showModal()` supplies the browser's modal semantics and makes the surrounding document inert. Angular first renders the accessible title and controls, then opens the modal using `afterNextRender`. Small explicit handlers cover initial focus, Tab boundaries, and returning focus after close. This avoids shipping a component library for a single dialog.
+Mobile and tablet coverage uses browser emulation, not physical devices. Screen-reader testing, Safari/Firefox coverage and Lighthouse profiling are not complete. The contact form and account-related dialogs remain local demonstrations; there is no backend or real message delivery.
 
-### What makes the form accessible?
+## Sources
 
-Each control has a visible label and a stable ID. Invalid fields expose `aria-invalid` and reference specific English errors with `aria-describedby`. Submitting invalid data renders the feedback before moving focus to the first invalid field. Errors have an overall alert; the confirmation dialog explains that sending is simulated. A character counter and both HTML and Angular validation enforce the 1,500-character question limit. Visual error color is accompanied by text.
-
-### What improved performance?
-
-The font payload dropped from 977,336 to 48,256 bytes. The variable WOFF2 covers the English interface and uses local delivery, preload and `font-display: swap`. This does not prove a particular LCP or overall loading score. Intro priority and reserved image dimensions are further concrete choices, while image derivatives and production profiling are future improvements.
-
-### What would change with a real API?
-
-Keep server-side contact delivery behind a service with a typed contract. Add pending, success and failure states, prevent duplicate submissions, and announce feedback accessibly. Repeat validation on the server. Authentication and enrollment require actual flows and failure states; informational dialogs should not be presented as implemented account features.
-
-## Verification log
-
-Commands and browser checks should be rerun when behavior or layout changes. Unit tests exercise application behavior; they do not replace browser testing of native modal focus or screen-reader announcements.
-
-- Build: production compilation with strict TypeScript and template checks and configured bundle budgets.
-- Tests: root rendering, valid anchor destinations, menu visibility/Escape/section focus, dialog render timing/focus restoration/Tab boundaries, form validation/focus/error association, email and question-length boundaries, valid-submission reset, confirmation dialog, outside-click dismissal and rating-to-star consistency.
-- Style checks: BEM syntax, ID selectors, duplicate properties, empty rules, invalid colors.
-- Formatting: Prettier on the source and project documentation.
-- Browser: keyboard dialog and form flows, mobile navigation, responsive overflow and visual review. See the final verification results below.
-
-## Still to validate before claiming full accessibility or production performance
-
-Run NVDA with a supported Windows browser or VoiceOver on Apple devices, including live form feedback. Check text zoom, forced colors and real-device touch behavior. Run an automated accessibility scan alongside manual checks, then profile the production build with Lighthouse and real network conditions. Do not substitute a good automated score for assistive-technology testing.
-
-## References
-
-- [Angular style guide](https://angular.dev/style-guide)
-- [BEM naming](https://getbem.com/naming/)
-- [WAI modal dialog pattern](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/)
-- [WAI form notifications](https://www.w3.org/WAI/tutorials/forms/notifications/)
-- [Angular afterNextRender](https://angular.dev/api/core/afterNextRender)
-
-## Earlier browser verification — 2026-11-20
-
-- Production build passed without warnings; one route prerendered. Initial JavaScript and CSS total: 355.90 kB raw, 93.92 kB estimated transfer, excluding fonts and images.
-- All 10 tests passed across 4 test files.
-- Stylelint and Prettier checks passed.
-- Browser keyboard checks passed: modal initial focus; Tab and Shift+Tab wrapping; Escape and trigger restoration; mobile login return to the menu toggle; mobile section focus; skip-link target; first-invalid-field focus and its error reference.
-- Browser viewport checks at 320, 375, 768 and 1280 px showed no horizontal document overflow. Mobile and desktop layouts were visually reviewed.
-- Declared flat-color contrast calculations: body text on white 5.63:1, secondary text on white 4.73:1, white on the primary blue 5.49:1, featured light text on blue 4.502:1, form border on the input background 3.20:1, footer links on the dark background 7.07:1. These are selected color pairs, not an audit of every rendered element or state.
-- No real email was sent. No screen-reader audit, automated accessibility scan, real-device matrix or Lighthouse benchmark was completed.
-
-## Interaction update — 2026-11-20
-
-- Static business values now live in home-data.ts; repeated counts, course facts and rating stars share that source.
-- Outside clicks dismiss the mobile menu. Invalid forms preserve input; valid demo submissions open the existing accessible dialog and reset the form.
-- Automated verification: 25 tests across 5 files passed, including input boundaries, partial rating fills and focus restoration.
-- These new interactions have automated coverage; the earlier browser checks above predate this update. Real-device and screen-reader verification remain pending.
+- [Next.js App Router installation](https://nextjs.org/docs/app/getting-started/installation)
+- [Tailwind with Next.js](https://tailwindcss.com/docs/installation/framework-guides/nextjs)

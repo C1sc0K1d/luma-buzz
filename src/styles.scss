@@ -1,8 +1,0 @@
-// Order matters: foundation, reusable blocks, layout utilities, then accessibility.
-@use 'styles/fonts';
-@use 'styles/tokens';
-@use 'styles/base';
-@use 'styles/typography';
-@use 'styles/elements';
-@use 'styles/utilities';
-@use 'styles/accessibility';
