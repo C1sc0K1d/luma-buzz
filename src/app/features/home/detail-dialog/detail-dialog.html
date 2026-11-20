@@ -1,0 +1,40 @@
+<dialog
+  #detailDialog
+  class="detail-dialog"
+  aria-labelledby="dialog-title"
+  aria-describedby="dialog-description"
+  (close)="restoreFocus()"
+  (keydown)="containTabFocus($event)"
+  (click)="closeFromBackdrop($event)"
+>
+  @if (detail(); as item) {
+    <div class="detail-dialog__content">
+      <button class="detail-dialog__close" autofocus aria-label="Close dialog" (click)="close()">
+        ×
+      </button>
+      <p class="eyebrow">{{ item.eyebrow }}</p>
+      <h2 id="dialog-title">{{ item.title }}</h2>
+      <p class="detail-dialog__description" id="dialog-description">{{ item.description }}</p>
+      @if (item.facts) {
+        <ul class="detail-dialog__facts">
+          @for (fact of item.facts; track fact) {
+            <li>{{ fact }}</li>
+          }
+        </ul>
+      }
+      <div class="u-actions">
+        @if (!item.confirmation) {
+          <a
+            class="button button--primary"
+            [href]="'#' + primaryAction().sectionId"
+            (click)="close(primaryAction().sectionId)"
+            >{{ primaryAction().label }}</a
+          >
+        }
+        <button class="button button--secondary" (click)="close()">
+          {{ item.confirmation ? 'Done' : 'Keep exploring' }}
+        </button>
+      </div>
+    </div>
+  }
+</dialog>

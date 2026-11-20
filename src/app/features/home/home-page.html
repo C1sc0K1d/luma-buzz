@@ -1,0 +1,85 @@
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header" id="top">
+  <div class="u-container site-header__inner">
+    <a class="brand-logo" href="#top" aria-label="Luma home">luma.</a>
+    <nav class="site-header__nav" aria-label="Main navigation">
+      <a href="#courses">Courses</a><a href="#contact">For Teams</a
+      ><a href="#community">Community</a><a href="#how-it-works">About</a>
+    </nav>
+    <div class="site-header__actions">
+      <button class="site-header__login" (click)="openDetail('login')">Log in</button
+      ><a class="button button--primary" href="#courses">Start learning</a>
+    </div>
+    <button
+      #menuToggle
+      class="site-header__toggle"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="mobile-menu"
+      [attr.aria-label]="menuOpen() ? 'Close navigation menu' : 'Open navigation menu'"
+      (click)="menuOpen.set(!menuOpen())"
+    >
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        @if (menuOpen()) {
+          <path d="m6 6 12 12M6 18 18 6" />
+        } @else {
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        }
+      </svg>
+    </button>
+  </div>
+  <nav
+    #mobileMenu
+    id="mobile-menu"
+    class="site-header__mobile-nav"
+    aria-label="Mobile navigation"
+    [hidden]="!menuOpen()"
+  >
+    <a href="#courses" (click)="focusSection('courses')">Courses</a
+    ><a href="#contact" (click)="focusSection('contact')">For Teams</a
+    ><a href="#community" (click)="focusSection('community')">Community</a
+    ><a href="#how-it-works" (click)="focusSection('how-it-works')">About</a
+    ><button (click)="openDetail('login')">Log in</button
+    ><a href="#courses" class="button button--primary" (click)="focusSection('courses')"
+      >Start learning</a
+    >
+  </nav>
+</header>
+<main id="main" tabindex="-1">
+  <app-intro-section />
+  <app-learning-section (explore)="openDetail($event)" />
+  <app-community-section />
+  <app-contact-section (messageSubmitted)="confirmContact($event)" />
+  <app-join-section />
+</main>
+<footer class="site-footer">
+  <div class="u-container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a class="brand-logo" href="#top" aria-label="Luma home">luma.</a>
+        <p class="site-footer__description">Practical learning for curious people.</p>
+      </div>
+      <nav class="site-footer__nav" aria-label="Explore">
+        <h2 class="site-footer__heading">Explore</h2>
+        <a class="site-footer__link" href="#courses">Courses</a
+        ><a class="site-footer__link" href="#courses">Categories</a
+        ><a class="site-footer__link" href="#community">Instructors</a
+        ><a class="site-footer__link" href="#contact">For Teams</a>
+      </nav>
+      <nav class="site-footer__nav" aria-label="Company">
+        <h2 class="site-footer__heading">Company</h2>
+        <a class="site-footer__link" href="#how-it-works">About</a
+        ><button class="site-footer__link" (click)="openDetail('careers')">Careers</button
+        ><button class="site-footer__link" (click)="openDetail('journal')">Journal</button>
+      </nav>
+      <nav class="site-footer__nav" aria-label="Support">
+        <h2 class="site-footer__heading">Support</h2>
+        <a class="site-footer__link" href="#contact">Help Center</a
+        ><a class="site-footer__link" href="#contact">Contact</a
+        ><button class="site-footer__link" (click)="openDetail('terms')">Terms</button
+        ><button class="site-footer__link" (click)="openDetail('privacy')">Privacy</button>
+      </nav>
+    </div>
+    <p class="site-footer__copyright">© {{ data.copyrightYear }} Luma Learning</p>
+  </div>
+</footer>
+<app-detail-dialog />

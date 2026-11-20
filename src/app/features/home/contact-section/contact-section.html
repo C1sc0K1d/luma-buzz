@@ -1,0 +1,123 @@
+<section class="u-section contact" id="contact" tabindex="-1" aria-labelledby="contact-title">
+  <div class="u-container contact__layout">
+    <div class="contact__copy">
+      <p class="eyebrow">Contact</p>
+      <h2 id="contact-title">Get in touch</h2>
+      <p class="contact__description">
+        Have a question? We’re here to help. Whether you’re looking for the right course, learning
+        with your team or interested in teaching with Luma, we’d love to hear from you.
+      </p>
+      <div class="contact__details">
+        <a class="contact__item" [href]="'mailto:' + contact.email"
+          ><span class="contact__icon"
+            ><svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.9a9 9 0 1 1 16.6-4.6Z" />
+              <path
+                d="M8 11h.01M12 11h.01M16 11h.01"
+                stroke-linecap="round"
+                stroke-width="2.5"
+              /></svg></span
+          ><span
+            ><span class="contact__label">Email</span
+            ><span class="contact__email">{{ contact.email }}</span></span
+          ></a
+        >
+        <div class="contact__item">
+          <span class="contact__icon"
+            ><svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5" />
+              <path d="M12 7v5l3 2" stroke-linecap="round" /></svg></span
+          ><span
+            ><span class="contact__label">Response Time</span
+            ><span class="contact__value"
+              >Up to {{ contact.responseBusinessHours }} hours on business days</span
+            ></span
+          >
+        </div>
+      </div>
+    </div>
+    <form
+      #contactForm
+      class="contact-form"
+      [formGroup]="form"
+      (ngSubmit)="submitMessage(contactForm, submitButton)"
+      novalidate
+      aria-labelledby="form-title"
+    >
+      <h3 id="form-title">Contact us</h3>
+      <p class="contact-form__intro">Fill out the fields and we will get in touch.</p>
+      <div class="contact-form__field">
+        <label class="contact-form__label" for="full-name">Full name</label
+        ><input
+          class="contact-form__input"
+          id="full-name"
+          formControlName="name"
+          name="name"
+          autocomplete="name"
+          placeholder="Your name"
+          maxlength="100"
+          required
+          [attr.aria-invalid]="invalid('name')"
+          [attr.aria-describedby]="invalid('name') ? 'name-error' : null"
+        />
+        @if (invalid('name')) {
+          <p class="contact-form__error" id="name-error">Please enter your name.</p>
+        }
+      </div>
+      <div class="contact-form__field">
+        <label class="contact-form__label" for="email">Email</label
+        ><input
+          class="contact-form__input"
+          id="email"
+          type="email"
+          formControlName="email"
+          name="email"
+          autocomplete="email"
+          placeholder="youremail@example.com"
+          maxlength="254"
+          required
+          [attr.aria-invalid]="invalid('email')"
+          [attr.aria-describedby]="invalid('email') ? 'email-error' : null"
+        />
+        @if (invalid('email')) {
+          <p class="contact-form__error" id="email-error">Please enter a valid email address.</p>
+        }
+      </div>
+      <div class="contact-form__field">
+        <label class="contact-form__label" for="question">Your question</label
+        ><textarea
+          class="contact-form__input contact-form__input--multiline"
+          id="question"
+          formControlName="question"
+          name="question"
+          placeholder="Tell us how we can help..."
+          rows="4"
+          [attr.maxlength]="contact.questionMaxLength"
+          required
+          [attr.aria-invalid]="invalid('question')"
+          [attr.aria-describedby]="
+            invalid('question') ? 'question-hint question-error' : 'question-hint'
+          "
+        ></textarea>
+        <p class="contact-form__hint" id="question-hint">
+          {{ form.controls.question.value.length }} / {{ contact.questionMaxLength }} characters
+        </p>
+        @if (invalid('question')) {
+          <p class="contact-form__error" id="question-error">
+            @if (form.controls.question.hasError('maxlength')) {
+              Please use no more than {{ contact.questionMaxLength }} characters.
+            } @else {
+              Please tell us how we can help.
+            }
+          </p>
+        }
+      </div>
+      <button #submitButton class="button button--primary" type="submit">Send message</button>
+      @if (attempted() && form.invalid) {
+        <p class="contact-form__error contact-form__status" role="alert">
+          Please check the highlighted fields.
+        </p>
+      }
+    </form>
+  </div>
+</section>

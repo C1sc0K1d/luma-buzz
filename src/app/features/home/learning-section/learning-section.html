@@ -1,0 +1,97 @@
+<section
+  class="u-section course-categories"
+  id="courses"
+  tabindex="-1"
+  aria-labelledby="courses-title"
+>
+  <div class="u-container">
+    <div class="course-categories__intro">
+      <p class="eyebrow">Find your next skill</p>
+      <h2 id="courses-title">Learn something worth knowing.</h2>
+      <p>Short, practical courses designed around skills you can put to work immediately.</p>
+    </div>
+    <div class="course-categories__grid">
+      @for (category of categories; track category.name; let i = $index) {
+        <article class="course-card">
+          <span class="course-card__number">0{{ i + 1 }}</span>
+          <h3>{{ category.name }}</h3>
+          <p>{{ category.description }}</p>
+          <button
+            class="course-card__link"
+            (click)="explore.emit(category.name)"
+            [attr.aria-label]="'Explore ' + category.name"
+          >
+            Explore <span class="arrow-icon" aria-hidden="true">→</span>
+          </button>
+        </article>
+      }
+    </div>
+  </div>
+</section>
+<section
+  class="u-section featured-course"
+  id="featured-course"
+  tabindex="-1"
+  aria-labelledby="featured-title"
+>
+  <div class="u-container featured-course__layout">
+    <div class="featured-course__visual">
+      <img
+        src="images/featured.jpg"
+        width="700"
+        height="500"
+        alt="A product designer experimenting with materials and prototypes at a workbench"
+        loading="lazy"
+      /><span>Featured course</span>
+    </div>
+    <div class="featured-course__copy">
+      <p class="eyebrow">Most popular this month</p>
+      <h2 id="featured-title">{{ course.title }}</h2>
+      <p class="featured-course__description">
+        {{ course.description }}
+      </p>
+      <p class="featured-course__instructor">
+        with {{ course.instructor }} · {{ course.instructorRole }}
+      </p>
+      <ul class="featured-course__facts" aria-label="Course details">
+        @for (fact of facts; track $index) {
+          <li>{{ fact }}</li>
+        }
+      </ul>
+      <div class="u-actions">
+        <button class="button button--yellow" (click)="explore.emit('featured')">View course</button
+        ><a class="button button--ghost" href="#courses"
+          >Browse all courses <span class="arrow-icon" aria-hidden="true">→</span></a
+        >
+      </div>
+    </div>
+  </div>
+</section>
+<section
+  class="u-section learning-steps"
+  id="how-it-works"
+  tabindex="-1"
+  aria-labelledby="how-title"
+>
+  <div class="u-container">
+    <div class="learning-steps__heading">
+      <p class="eyebrow">How Luma works</p>
+      <h2 id="how-title">Less browsing. More learning.</h2>
+    </div>
+    <ol class="learning-steps__list">
+      @for (step of steps; track step.title; let i = $index) {
+        <li>
+          <span
+            class="learning-steps__shape"
+            [class.learning-steps__shape--experience]="i === 1"
+            [class.learning-steps__shape--practice]="i === 2"
+            aria-hidden="true"
+          ></span>
+          <p class="learning-steps__number">Step 0{{ i + 1 }}</p>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

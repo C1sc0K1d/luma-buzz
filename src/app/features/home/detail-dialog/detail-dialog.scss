@@ -1,0 +1,55 @@
+.detail-dialog {
+  padding: 0;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  width: min(580px, calc(100% - 32px));
+  max-height: calc(100dvh - 48px);
+}
+.detail-dialog::backdrop {
+  background: #171b2c99;
+  backdrop-filter: blur(4px);
+}
+.detail-dialog__content {
+  padding: 40px 28px 28px;
+  position: relative;
+}
+.detail-dialog__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 30px;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+}
+@media (hover: hover) {
+  .detail-dialog__close:hover {
+    background: var(--lavender);
+    color: var(--blue);
+  }
+}
+.detail-dialog h2 {
+  font-size: 32px;
+}
+.detail-dialog__description {
+  margin-block: 24px;
+}
+.detail-dialog__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin-bottom: 28px;
+}
+.detail-dialog__facts li {
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: var(--lavender);
+  color: var(--blue);
+  font-size: 12px;
+}
